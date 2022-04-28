@@ -1,26 +1,30 @@
 import sys
+import time
+from itertools import permutations
 input = sys.stdin.readline
 
-def solve(n1, n2, s, layer, nums):
-    global solution
-    if layer == min(len(n1), len(n2)): solution = nums
-    for i in range(10):
-        if i == 0 and layer == len(n1) - 1: continue
-        if nums[i] == None or nums[i] == n1[layer]: nums[i] = n1[layer]
-        else: continue
-        for j in range(10):
-            if j == 0 and layer == len(n2) - 1: continue
-            if nums[j] == None or nums[j] == n2[layer]: nums[j] = n2[layer]
-            else: continue
-            if nums[(i + j) % 10] == s[layer] or nums[(i + j) % 10] == None:
-                nums[(i + j) % 10] = s[layer]
-                solve(n1, n2, s, layer + 1, nums)
+def solve(n1, n2, s):
+    first = list(set(n1[0] + n2[0] + s[0]))
+    letters = list(set(n1 + n2 + s))
+    letters += ['!'] * (10 - len(letters))
+    perms = permutations(letters)
+    for perm in perms:
+        num1 = n1; num2 = n2; sums = s
+        isFirst = False
+        for f in first:
+          if perm[0] == f: isFirst = True; break
+        if isFirst: continue
+        for i in range(len(perm)):
+            if perm[i] == '!': continue # iterate through each of the numbers instead of running replace() on every iteration
+            num1 = num1.replace(perm[i], str(i)); num2 = num2.replace(perm[i], str(i)); sums = sums.replace(perm[i], str(i))
+        if int(num1) + int(num2) == int(sums):
+            return [num1, num2, sums]
 
-for _ in range(int(input())):
-    solution = [None] * 10
-    n1 = input().strip(); n2 = input().strip(); s = input().strip()
-    solve(n1, n2, s, 0, [None] * 10)
-    for i in range(len(solution)):
-        ss = solution[i]
-        if ss != None: n1 = n1.replace(ss, s); n2 = n2.replace(ss, s); s.replace(ss, s)
-    print(n1, n2, s, sep='\n')
+for i in range(int(input())):
+    n1 = input().strip()
+    n2 = input().strip()
+    s = input().strip()
+    now = time.time()
+    print('\n'.join(solve(n1, n2, s)))
+    end = time.time() - now
+    print(end)
