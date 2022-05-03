@@ -4,7 +4,7 @@ using namespace std;
 
 string a;
 
-int split (string str) {
+int split(string str) {
     string w = "";
     int j = 0;
     int k = 0;
