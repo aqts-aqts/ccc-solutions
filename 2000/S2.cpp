@@ -30,11 +30,6 @@ int main() {
             streams.erase(it);
             streams[n3-1] += n4;
         }
-        /*
-        for (int i = 0; i < streams.size(); i++) {
-            cout << streams[i] << " ";
-        }
-        */
 
         cin >> num;
     }
