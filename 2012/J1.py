@@ -1,0 +1,6 @@
+limit=int(input())
+spd=int(input())
+if spd<=limit:print("Congratulations, you are within the speed limit!")
+elif spd-limit <=20:print("You are speeding and your fine is $100.")
+elif spd-limit <=30:print("You are speeding and your fine is $270.")
+else:print("You are speeding and your fine is $500.")
