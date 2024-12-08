@@ -1,48 +1,35 @@
-import math
+from collections import deque
 
-m = int(input())
-n = int(input())
-graph = []
-found = False
+r = int(input())
+c = int(input())
 
-for i in range(m):
-    graph.append([int(x) for x in input().split()])
+n = r * c
 
-def findNodes(num):
-    pairs = []
-    for i in range(1, math.ceil(math.sqrt(num) + 1)):
-        if num % i == 0:
-            p = num // i
-            if (i == m and p == n or i == n and p == m):
-                global found
-                found = True
+v = [list() for _ in range(n)]
+for i in range(1, r + 1):
+    row = list(map(int, input().split()))
+    for j in range(1, c + 1):
+        v[i * j - 1].append(row[j - 1])
 
-            if (i <= m and p <= n):
-                pairs.append((i, p))
-            if (i <= n and p <= m):
-                pairs.append((p, i))
-    return pairs
+stack = deque()
+visited = set()
+stack.append(v[0][0])
 
-def BFS():
-    visited = dict()
-    queue = []
+done = False
 
-    queue.append((1, 1))
-    visited[(1, 1)] = True
-    while queue:
-        global found
-        if found:
-            return "yes"
+while stack:
+    cur = stack.pop()
 
-        front = queue.pop(0)
+    if cur == n:
+        print('yes')
+        done = True
+        break
 
-        if front == (m, n):
-            return "yes"
+    if cur < n and cur - 1 not in visited:
+        visited.add(cur - 1)
+        for i in v[cur - 1]:
+            if i <= n:
+                stack.append(i)
 
-        for f in findNodes(graph[front[0] - 1][front[1] - 1]):
-            if not f in visited:
-                queue.append(f)
-                visited[f] = True
-    return "no"
-
-print(BFS())
+if not done:
+    print('no')
